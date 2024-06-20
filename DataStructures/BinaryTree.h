@@ -9,7 +9,7 @@ namespace ds
     class Tree
     {
     public:
-        Tree(T _data, Tree *_left = nullptr, Tree *_right = nullptr, Tree *_parent = nullptr) : data(_data), left(_left), right(_right), parent(_parent) {}
+        Tree(T data, Tree *_left = nullptr, Tree *_right = nullptr, Tree *_parent = nullptr) : data(data), left(_left), right(_right), parent(_parent) {}
         ~Tree()
         {
             {
@@ -47,43 +47,43 @@ namespace ds
             parent = newParent;
         }
 
-        // insertA(_data, this) is not used because
+        // insertA(data, this) is not used because
         // the origin root of the tree may change after balancing.
         // Thus the pointer in the driver code may need to be updated.
 
         // For this reasons many methods are made static, and the user
         // needs to pass a pointer to a pointer to their tree.
 
-        static void insert(const T &_data, Tree **root)
+        static void insert(const T &data, Tree **root)
         {
-            insertA(_data, root);
+            insertA(data, root);
         }
 
-        static Tree *find(const T &_data, Tree *root)
+        static Tree *find(const T &data, Tree *root)
         {
             if (root == nullptr)
             {
                 return nullptr;
             }
 
-            if (root->data == _data)
+            if (root->data == data)
             {
                 return root;
             }
 
-            if (_data > root->data)
+            if (data > root->data)
             {
-                return find(_data, root->right);
+                return find(data, root->right);
             }
             else
             {
-                return find(_data, root->left);
+                return find(data, root->left);
             }
         }
 
-        static bool isFind(const T &_data, Tree *root)
+        static bool isFind(const T &data, Tree *root)
         {
-            if (find(_data, root))
+            if (find(data, root))
             {
                 return true;
             }
@@ -345,7 +345,7 @@ namespace ds
         static Tree *Balance(Tree *tr)
         {
             // the right subtree is heavier -> need to rotate to the left
-            if (Factor(tr) < -1)
+            if (factor(tr) < -1)
             {
                 // if the right subtree of the subtree is heavier or the tree is balanced:
                 // left rotation
@@ -353,7 +353,7 @@ namespace ds
                 // If the left subtree of tr->right is 1 or more point taller, we need to rotate tr->right to the right and then make a left rotation on tr
                 // Otherwise in the resulting tree the left subtree will be taller
 
-                if (Factor(tr->right) <= 0)
+                if (factor(tr->right) <= 0)
                 {
                     tr = leftRotation(tr);
                 }
@@ -365,9 +365,9 @@ namespace ds
             }
 
             // Same logic, symmetrically reversed
-            if (Factor(tr) > 1)
+            if (factor(tr) > 1)
             {
-                if (Factor(tr->left) >= 0)
+                if (factor(tr->left) >= 0)
                 {
                     tr = rightRotation(tr);
                 }
@@ -422,21 +422,21 @@ namespace ds
             copyTree(newTree, root->right);
         }
 
-        static void insertA(const T &_data, Tree **root, Tree *parent = nullptr)
+        static void insertA(const T &data, Tree **root, Tree *parent = nullptr)
         {
             if (*root == nullptr)
             {
-                *root = new Tree(_data, nullptr, nullptr, parent);
+                *root = new Tree(data, nullptr, nullptr, parent);
                 return;
             }
 
-            if (_data > (*root)->data)
+            if (data > (*root)->data)
             {
-                insertA(_data, &((*root)->right), *root);
+                insertA(data, &((*root)->right), *root);
             }
             else
             {
-                insertA(_data, &((*root)->left), *root);
+                insertA(data, &((*root)->left), *root);
             }
 
             *root = Balance(*root);
@@ -470,7 +470,7 @@ namespace ds
             return p;
         };
 
-        static int Factor(Tree *root)
+        static int factor(Tree *root)
         {
             if (root == nullptr)
             {
