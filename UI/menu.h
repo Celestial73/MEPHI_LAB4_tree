@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-
 #include "../DataStructures/BinaryTree.h"
 #include "../tests/BinaryTree_tests.h"
 #include "../TreeUtility/TreeFunctions.h"

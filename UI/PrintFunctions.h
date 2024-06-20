@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 void printTypes();
 void printMainMenu();
 

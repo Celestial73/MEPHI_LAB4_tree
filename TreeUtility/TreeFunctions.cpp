@@ -1,30 +1,31 @@
 #include "TreeFunctions.h"
+#include <bits/stdc++.h>
 using namespace std;
 
-int findIndex(string str, int si, int ei, char openChar, char closeChar)
+int findIndexOfClosingChar(const string &str, int startIndex, int endIndex, char openChar, char closeChar, int count = 0)
 {
-    if (si > ei)
+    if (startIndex > endIndex)
         return -1;
 
-    stack<char> s;
-
-    for (int i = si; i <= ei; i++)
+    if (str[startIndex] == openChar)
     {
-
-        if (str[i] == openChar)
-            s.push(str[i]);
-
-        else if (str[i] == closeChar)
+        return findIndexOfClosingChar(str, startIndex + 1, endIndex, openChar, closeChar, count + 1);
+    }
+    else if (str[startIndex] == closeChar)
+    {
+        if (count == 1)
         {
-            if (s.top() == openChar)
-            {
-                s.pop();
-                if (s.empty())
-                    return i;
-            }
+            return startIndex;
+        }
+        else
+        {
+            return findIndexOfClosingChar(str, startIndex + 1, endIndex, openChar, closeChar, count - 1);
         }
     }
-    return -1;
+    else
+    {
+        return findIndexOfClosingChar(str, startIndex + 1, endIndex, openChar, closeChar, count);
+    }
 }
 
 string treeToString(const ds::Tree<int> *root)
@@ -61,7 +62,7 @@ ds::Tree<int> *treeFromString(const string str, int si, int ei)
     root->find(10, root);
     if (si <= ei && str[si] == '(')
     {
-        index = findIndex(str, si, ei, '(', ')');
+        index = findIndexOfClosingChar(str, si, ei, '(', ')');
         if (index != -1)
         {
             root->setLeft(treeFromString(str, si + 1, index - 1));
@@ -71,7 +72,7 @@ ds::Tree<int> *treeFromString(const string str, int si, int ei)
 
     if (si <= ei && str[si] == '[')
     {
-        index = findIndex(str, si, ei, '[', ']');
+        index = findIndexOfClosingChar(str, si, ei, '[', ']');
         if (index != -1)
         {
             root->setRight(treeFromString(str, si + 1, index - 1));
@@ -95,4 +96,9 @@ void printBinaryTree(const std::string &prefix, const ds::Tree<int> *tr, bool is
 void printBT(const ds::Tree<int> *tree)
 {
     printBinaryTree("", tree, false);
+}
+
+void printInt(int i)
+{
+    std::cout << i << " ";
 }

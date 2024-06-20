@@ -1,7 +1,8 @@
 #include "PrintFunctions.h"
+
 #include <iostream>
-#include <string>
 #include <iomanip>
+#include <string>
 
 using namespace std;
 

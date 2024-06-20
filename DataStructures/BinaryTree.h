@@ -1,7 +1,5 @@
 #pragma once
-#include <queue>
-#include <bits/stdc++.h>
-#include <iostream>
+
 namespace ds
 {
 
@@ -22,41 +20,24 @@ namespace ds
             }
         }
 
-        const Tree *getLeft() const
+        static void insert(const T &data, Tree **root, Tree *parent = nullptr)
         {
-            return this->left;
-        }
-        const Tree *getRight() const
-        {
-            return this->right;
-        }
-        const Tree *getParent() const
-        {
-            return this->parent;
-        }
-        void setLeft(Tree *newLeft)
-        {
-            left = newLeft;
-        }
-        void setRight(Tree *newRight)
-        {
-            right = newRight;
-        }
-        void setParent(Tree *newParent)
-        {
-            parent = newParent;
-        }
+            if (*root == nullptr)
+            {
+                *root = new Tree(data, nullptr, nullptr, parent);
+                return;
+            }
 
-        // insertA(data, this) is not used because
-        // the origin root of the tree may change after balancing.
-        // Thus the pointer in the driver code may need to be updated.
+            if (data > (*root)->data)
+            {
+                insert(data, &((*root)->right), *root);
+            }
+            else
+            {
+                insert(data, &((*root)->left), *root);
+            }
 
-        // For this reasons many methods are made static, and the user
-        // needs to pass a pointer to a pointer to their tree.
-
-        static void insert(const T &data, Tree **root)
-        {
-            insertA(data, root);
+            *root = Balance(*root);
         }
 
         static Tree *find(const T &data, Tree *root)
@@ -140,26 +121,26 @@ namespace ds
                 return false;
             }
 
-            if (areEqual(candidate, root))
+            if (areIdentical(candidate, root))
             {
                 return true;
             }
             return isSubtree(root->left, candidate) || isSubtree(root->right, candidate);
         }
 
-        static bool areEqual(Tree *root1, Tree *root2)
+        static bool areIdentical(Tree *root1, Tree *root2)
         {
-            if (root1 == NULL && root2 == NULL)
+            if (root1 == nullptr && root2 == nullptr)
             {
                 return true;
             }
 
-            if (root1 == NULL || root2 == NULL)
+            if (root1 == nullptr || root2 == nullptr)
             {
                 return false;
             }
 
-            return (root1->data == root2->data && areEqual(root1->left, root2->left) && areEqual(root1->right, root2->right));
+            return (root1->data == root2->data && areIdentical(root1->left, root2->left) && areIdentical(root1->right, root2->right));
         }
 
         static void reduce(T &result, Tree *root, T (*BinaryOperation)(T, T))
@@ -177,7 +158,8 @@ namespace ds
         {
             return this->data;
         };
-        int count(Tree *root)
+
+        int count(Tree *root) const
         {
             if (root == nullptr)
                 return 0;
@@ -196,163 +178,84 @@ namespace ds
         {
             return treeSuccessorA(this);
         };
-        static Tree *deleteTree(const T &data, Tree **root)
+        static void deleteElement(const T &data, Tree **root)
         {
-            Tree *item = (*root)->find(data, *root);
-            if (!item)
+            if (*root == nullptr)
+                return;
+
+            if (data < (*root)->data)
+                deleteElement(data, &(*root)->left);
+
+            else if (data > (*root)->data)
+                deleteElement(data, &(*root)->right);
+
+            else
             {
-                return *root;
-            }
-            if (item->left == nullptr && item->right == nullptr)
-            {
-                if (item == *root)
+                // case 1: no children -> remove the node
+                if ((*root)->left == nullptr && (*root)->right == nullptr)
                 {
-                    delete (*root);
+                    delete *root;
                     *root = nullptr;
-                    return nullptr;
                 }
-
-                Tree *parent = item->parent;
-
-                if (parent->right == item)
+                // case 2: one child -> replace the node with the child
+                else if ((*root)->left == nullptr)
                 {
-                    parent->right = nullptr;
+                    Tree *temp = *root;
+                    *root = (*root)->right;
+                    (*root)->parent = temp->parent;
+                    temp->right = nullptr;
+                    delete temp;
                 }
+
+                else if ((*root)->right == nullptr)
+                {
+                    Tree *temp = *root;
+                    *root = (*root)->left;
+                    (*root)->parent = temp->parent;
+                    temp->left = nullptr;
+                    delete temp;
+                }
+                // case 3: both children -> find its in-order successor,
+                // replace the node's value with the successor's value, and delete the successor.
                 else
                 {
-                    parent->left = nullptr;
+                    Tree *temp = treeMinA((*root)->right);
+                    (*root)->data = temp->data;
+                    deleteElement(temp->data, &(*root)->right);
                 }
-
-                delete (item);
-
-                while (parent != nullptr)
-                {
-                    parent->right = Balance(parent->right);
-                    parent->left = Balance(parent->left);
-                    parent = parent->parent;
-                }
-                *root = Balance(*root);
-                return parent;
-            }
-
-            if (item->left == nullptr || item->right == nullptr)
-            {
-                if (item == *root)
-                {
-                    if (item->left != nullptr)
-                    {
-                        *root = item->left;
-                    }
-                    else
-                    {
-                        *root = item->right;
-                    }
-
-                    delete (item);
-
-                    (*root)->parent = nullptr;
-
-                    return nullptr;
-                }
-
-                Tree *parent = item->parent;
-                Tree *child = nullptr;
-
-                if (item->left != nullptr)
-                {
-                    child = item->left;
-                }
-                else
-                {
-                    child = item->right;
-                }
-
-                child->parent = parent;
-
-                if (parent->left == item)
-                {
-                    parent->left = child;
-                }
-                else
-                {
-                    parent->right = child;
-                }
-
-                delete (item);
-
-                while (child != nullptr)
-                {
-                    child->right = Balance(child->right);
-                    child->left = Balance(child->left);
-                    child = child->parent;
-                }
-                *root = Balance(*root);
-                return parent;
-            }
-
-            Tree *fin = item->treeSuccessor();
-            Tree *x = nullptr;
-
-            if (fin->left != nullptr)
-            {
-                x = fin->left;
-            }
-            else
-            {
-                x = fin->right;
-            }
-
-            if (x != nullptr)
-            {
-                x->parent = fin->parent;
-            }
-
-            if (fin->parent == nullptr)
-            {
-                *root = x;
-            }
-            else
-            {
-                if (fin->parent->left == fin)
-                {
-                    fin->parent->left = x;
-                }
-                else
-                {
-                    fin->parent->right = x;
-                }
-            }
-
-            if (fin != item)
-            {
-                item->data = std::move(fin->data);
-            }
-
-            Tree *balance = fin->parent;
-            delete (fin);
-
-            // for (; balance != nullptr;balance = balance->parent)
-            while (balance != nullptr)
-            {
-                balance->right = Balance(balance->right);
-                balance->left = Balance(balance->left);
-                balance = balance->parent;
             }
             *root = Balance(*root);
-            return item;
-        };
+        }
+
+        const Tree *getLeft() const
+        {
+            return this->left;
+        }
+        const Tree *getRight() const
+        {
+            return this->right;
+        }
+        const Tree *getParent() const
+        {
+            return this->parent;
+        }
+        void setLeft(Tree *newLeft)
+        {
+            left = newLeft;
+        }
+        void setRight(Tree *newRight)
+        {
+            right = newRight;
+        }
+        void setParent(Tree *newParent)
+        {
+            parent = newParent;
+        }
 
         static Tree *Balance(Tree *tr)
         {
-            // the right subtree is heavier -> need to rotate to the left
             if (factor(tr) < -1)
             {
-                // if the right subtree of the subtree is heavier or the tree is balanced:
-                // left rotation
-
-                // If the left subtree of tr->right is 1 or more point taller, we need to rotate tr->right to the right and then make a left rotation on tr
-                // Otherwise in the resulting tree the left subtree will be taller
-
                 if (factor(tr->right) <= 0)
                 {
                     tr = leftRotation(tr);
@@ -360,11 +263,9 @@ namespace ds
 
                 else
                 {
-                    tr = bLeftRotation(tr);
+                    tr = extendedLeftRotation(tr);
                 }
             }
-
-            // Same logic, symmetrically reversed
             if (factor(tr) > 1)
             {
                 if (factor(tr->left) >= 0)
@@ -374,7 +275,7 @@ namespace ds
 
                 else
                 {
-                    tr = bRrightRotation(tr);
+                    tr = extendedRightRotation(tr);
                 }
             }
             return tr;
@@ -387,15 +288,7 @@ namespace ds
                 return -1;
             }
             int leftHeight, rightHeight;
-            // if (root->left == nullptr)
-            // {
-            //     leftHeight = 0;
-            // }
-            // else
-            // {
-            //     // cout << "nonempty left height" << endl;
-            //     leftHeight = height(root->left);
-            // }
+
             root->left == nullptr ? leftHeight = 0 : leftHeight = height(root->left);
             root->right == nullptr ? rightHeight = 0 : rightHeight = height(root->right);
 
@@ -403,11 +296,63 @@ namespace ds
             {
                 return (leftHeight + 1);
             }
-            else
-            {
-                return (rightHeight + 1);
-            }
+            return (rightHeight + 1);
         };
+
+        void rootLeftRightTraversal(Tree *root, void (*handleElement)(T))
+        {
+            if (root != nullptr)
+            {
+                handleElement(root->data);
+                rootLeftRightTraversal(root->left, handleElement);
+                rootLeftRightTraversal(root->right, handleElement);
+            }
+        }
+        void rootRightLeftTraversal(Tree *root, void (*handleElement)(T))
+        {
+            if (root != nullptr)
+            {
+                handleElement(root->data);
+                rootLeftRightTraversal(root->right, handleElement);
+                rootLeftRightTraversal(root->left, handleElement);
+            }
+        }
+        void leftRightRootTraversal(Tree *root, void (*handleElement)(T))
+        {
+            if (root != nullptr)
+            {
+                rootLeftRightTraversal(root->left, handleElement);
+                rootLeftRightTraversal(root->right, handleElement);
+                handleElement(root->data);
+            }
+        }
+        void leftRootRightTraversal(Tree *root, void (*handleElement)(T))
+        {
+            if (root != nullptr)
+            {
+                rootLeftRightTraversal(root->left, handleElement);
+                handleElement(root->data);
+                rootLeftRightTraversal(root->right, handleElement);
+            }
+        }
+        void rightLeftRootTraversal(Tree *root, void (*handleElement)(T))
+        {
+            if (root != nullptr)
+            {
+                rootLeftRightTraversal(root->right, handleElement);
+                rootLeftRightTraversal(root->left, handleElement);
+                handleElement(root->data);
+            }
+        }
+        void rightRootLeftTraversal(Tree *root, void (*handleElement)(T))
+        {
+            if (root != nullptr)
+            {
+                rootLeftRightTraversal(root->right, handleElement);
+                handleElement(root->data);
+                rootLeftRightTraversal(root->left, handleElement);
+            }
+        }
 
     private:
         static void copyTree(Tree **newTree, Tree *root)
@@ -421,26 +366,6 @@ namespace ds
             copyTree(newTree, root->left);
             copyTree(newTree, root->right);
         }
-
-        static void insertA(const T &data, Tree **root, Tree *parent = nullptr)
-        {
-            if (*root == nullptr)
-            {
-                *root = new Tree(data, nullptr, nullptr, parent);
-                return;
-            }
-
-            if (data > (*root)->data)
-            {
-                insertA(data, &((*root)->right), *root);
-            }
-            else
-            {
-                insertA(data, &((*root)->left), *root);
-            }
-
-            *root = Balance(*root);
-        };
 
         static Tree *treeMinA(Tree *item)
         {
@@ -470,6 +395,7 @@ namespace ds
             return p;
         };
 
+        // difference between left and right subtree heights
         static int factor(Tree *root)
         {
             if (root == nullptr)
@@ -509,14 +435,15 @@ namespace ds
 
             return r;
         };
-        static Tree *bLeftRotation(Tree *root)
+
+        static Tree *extendedLeftRotation(Tree *root)
         {
             root->right = rightRotation(root->right);
             root = leftRotation(root);
 
             return root;
         };
-        static Tree *bRrightRotation(Tree *root)
+        static Tree *extendedRightRotation(Tree *root)
         {
             root->left = leftRotation(root->left);
             root = rightRotation(root);

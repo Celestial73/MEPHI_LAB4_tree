@@ -1,6 +1,6 @@
 #include <iostream>
 #include "menu.h"
-
+#include <bits/stdc++.h>
 using namespace std;
 void menu()
 {
@@ -90,6 +90,7 @@ void treeCreation()
     fillTree(&tr);
     cout << "The tree is: \n";
     printBT(tr);
+
     delete tr;
 }
 
@@ -212,7 +213,7 @@ void treeDeleteElement()
         cout << "There is already no such element in the tree." << endl;
         return;
     }
-    tr->deleteTree(number, &tr);
+    tr->deleteElement(number, &tr);
     printBT(tr);
 }
 

@@ -146,9 +146,9 @@ void testTreeDelete()
 {
     ds::Tree<int> *tr = createDefaultTree();
     IS_TRUE(tr->isFind(9, tr));
-    tr->deleteTree(9, &tr);
+    tr->deleteElement(9, &tr);
     IS_TRUE(!(tr->isFind(9, tr)));
-    tr->deleteTree(10, &tr);
+    tr->deleteElement(10, &tr);
     IS_TRUE(tr->get() == 8);
 
     std::cout << "Tree delete tested" << std::endl;
