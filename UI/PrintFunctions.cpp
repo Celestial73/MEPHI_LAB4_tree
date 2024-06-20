@@ -26,7 +26,7 @@ void printMainMenu()
     cout << "Enter 1 - test a tree" << endl;
     cout << "Enter 2 - run tests" << endl;
     cout << "Enter 3 - compare execution times for sets of different sizes" << endl;
-    cout << "Enter 4- cancel" << endl;
+    cout << "Enter 4 - cancel" << endl;
 };
 
 void printTreeOperations()

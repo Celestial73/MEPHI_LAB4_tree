@@ -21,7 +21,7 @@ void menu()
             compareExecutionTimes();
             break;
         case 4:
-            break;
+            return;
         default:
             return;
         }
