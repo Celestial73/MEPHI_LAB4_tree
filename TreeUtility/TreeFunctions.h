@@ -1,9 +1,8 @@
 #pragma once
 
 #include <string>
-
-#include <iostream>
 #include "../DataStructures/BinaryTree.h"
+
 using namespace std;
 
 string treeToString(const ds::Tree<int> *root);
