@@ -6,7 +6,6 @@ int findIndexOfClosingChar(const string &str, int startIndex, int endIndex, char
 {
     if (startIndex > endIndex)
         return -1;
-
     if (str[startIndex] == openChar)
     {
         return findIndexOfClosingChar(str, startIndex + 1, endIndex, openChar, closeChar, count + 1);

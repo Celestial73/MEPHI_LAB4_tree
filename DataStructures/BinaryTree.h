@@ -172,11 +172,11 @@ namespace ds
 
         Tree *treeMin()
         {
-            return treeMinA(this);
+            return treeMinByRoot(this);
         };
         Tree *treeSuccessor()
         {
-            return treeSuccessorA(this);
+            return treeSuccessorByRoot(this);
         };
         static void deleteElement(const T &data, Tree **root)
         {
@@ -219,7 +219,7 @@ namespace ds
                 // replace the node's value with the successor's value, and delete the successor.
                 else
                 {
-                    Tree *temp = treeMinA((*root)->right);
+                    Tree *temp = treeMinByRoot((*root)->right);
                     (*root)->data = temp->data;
                     deleteElement(temp->data, &(*root)->right);
                 }
@@ -367,7 +367,7 @@ namespace ds
             copyTree(newTree, root->right);
         }
 
-        static Tree *treeMinA(Tree *item)
+        static Tree *treeMinByRoot(Tree *item)
         {
             while (item->left != nullptr)
             {
@@ -376,7 +376,7 @@ namespace ds
             return item;
         };
 
-        static Tree *treeSuccessorA(Tree *item)
+        static Tree *treeSuccessorByRoot(Tree *item)
         {
             if (item->right != nullptr)
             {
