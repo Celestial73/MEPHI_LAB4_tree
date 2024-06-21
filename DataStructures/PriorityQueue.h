@@ -66,7 +66,7 @@ namespace ds
             delete tree;
         }
 
-        int getLength()
+        int getLength() const
         {
             return tree->count(tree);
         }
@@ -123,7 +123,7 @@ namespace ds
 
                 for (j = 0; j < candidateSize; j++)
                 {
-                    if (get(i + j) != other.get(j))
+                    if (get(i + j) != candidate.get(j))
                         break;
                 }
 

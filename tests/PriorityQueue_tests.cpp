@@ -12,7 +12,6 @@ void testGet()
     queue->push(10, 2);
     queue->push(12, 5);
     queue->push(19, 11);
-    printIntegerQueue(queue, queue->getLength());
     IS_TRUE(queue->get(3) == 10);
     IS_TRUE(queue->get(2) == 123);
     IS_TRUE(queue->get(1) == 12);
@@ -44,10 +43,10 @@ void testPeek()
 void testPush()
 {
     ds::PriorityQueue<int> *queue = new ds::PriorityQueue<int>();
-    int c = 99;
+    int data = 99;
     for (int i = 0; i < 10; i++)
     {
-        queue->push(c - i, i);
+        queue->push(data - i, i);
     }
     queue->push(10, 2);
     queue->push(12, 5);
@@ -60,10 +59,10 @@ void testPush()
 void testGetSubsequence()
 {
     ds::PriorityQueue<int> *queue = new ds::PriorityQueue<int>();
-    int c = 1;
+    int data = 1;
     for (int i = 0; i < 10; i++)
     {
-        queue->push(c + i, i);
+        queue->push(data + i, i);
     }
     ds::PriorityQueue<int> *subqueue = queue->getSubsequence(2, 5);
 
@@ -75,6 +74,31 @@ void testGetSubsequence()
         << "Priority Queue getSubsequence tested" << std::endl;
 }
 
+void testFindSubsequence()
+{
+    ds::PriorityQueue<int> *queue = new ds::PriorityQueue<int>();
+    int data = 1;
+    for (int i = 0; i < 10; i++)
+    {
+        queue->push(data + i, i);
+    }
+    ds::PriorityQueue<int> *subqueue = new ds::PriorityQueue<int>();
+    data = 4;
+    for (int i = 0; i < 3; i++)
+    {
+        subqueue->push(data + i, i);
+    }
+
+    IS_TRUE(queue->findSubsequence(*subqueue) == 4);
+    subqueue->push(100, 2);
+    IS_TRUE(queue->findSubsequence(*subqueue) == -1);
+
+    delete queue;
+    delete subqueue;
+    std::cout
+        << "Priority Queue findSubsequence tested" << std::endl;
+}
+
 void testPriorityQueue()
 {
 
@@ -82,6 +106,7 @@ void testPriorityQueue()
     testPush();
     testPeek();
     testGet();
+    testFindSubsequence();
     testGetSubsequence();
     std::cout << "Priority Queue tested" << std::endl;
 };
