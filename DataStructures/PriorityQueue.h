@@ -40,12 +40,6 @@ namespace ds
         friend class PriorityQueue<T>;
     };
 
-    // template <class T, T (*Transf)(T value)>
-    // Node<T> mapNode(Node<T> node)
-    // {
-    //     return Node(Transf(node.data), node.priority);
-    // }
-
     template <class T>
     class PriorityQueue
     {
