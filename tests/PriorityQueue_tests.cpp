@@ -1,8 +1,6 @@
 #include "../DataStructures/PriorityQueue.h"
 #include <iostream>
 #include "../tests/TestMacros.h"
-#include "../PriorityQueueUtility/PriorityQueueFunctions.h"
-
 void testGet()
 {
     const int data = 123;
@@ -34,7 +32,6 @@ void testPeek()
     const int data = 1;
     const int priority = 3;
     ds::PriorityQueue<int> *queue = new ds::PriorityQueue<int>(data, priority);
-    std::cout << queue->peek() << std::endl;
     IS_TRUE(queue->peek() == 1);
     delete queue;
     std::cout << "Priority Queue peek tested" << std::endl;
@@ -108,5 +105,5 @@ void testPriorityQueue()
     testGet();
     testFindSubsequence();
     testGetSubsequence();
-    std::cout << "Priority Queue tested" << std::endl;
+    std::cout << "PRIORITY QUEUE TESTED" << std::endl;
 };

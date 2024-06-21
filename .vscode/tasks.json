@@ -10,8 +10,7 @@
                 "${file}",
                 "-g",
                 "${fileDirname}\\TreeUtility\\TreeFunctions.cpp",
-                "-g",
-                "${fileDirname}\\PriorityQueueUtility\\PriorityQueueFunctions.cpp",
+               
                 "-g",
                 "${fileDirname}\\UI\\PrintFunctions.cpp",
                 "-g",

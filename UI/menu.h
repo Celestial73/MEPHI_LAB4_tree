@@ -1,9 +1,7 @@
 #pragma once
 
 #include "../DataStructures/BinaryTree.h"
-#include "../tests/BinaryTree_tests.h"
-#include "../TreeUtility/TreeFunctions.h"
-#include "PrintFunctions.h"
+#include "../DataStructures/PriorityQueue.h"
 
 void menu();
 
@@ -12,11 +10,13 @@ bool createInteger(int *);
 
 void runTests();
 void tryTree();
+void tryPriorityQueue();
 
 int createRandomIntNumber(int maxNumber);
 
 int getIntegerInRange(int min, int max);
 
+void fillIntegerTree(ds::Tree<int> **destination);
 void treeCreation();
 void treeCreationFromString();
 void saveTreeToString();
@@ -26,6 +26,11 @@ void treeReduce();
 void treeIsFind();
 void treeSubtree();
 void treeDeleteElement();
+
+void fillIntegerQueue(ds::PriorityQueue<int> *queue);
+void queueCreation();
+void queueGetSubsequence();
+void queueFindSubsequence();
 
 void executionTime(int size);
 double creationExecutionTime(int size);

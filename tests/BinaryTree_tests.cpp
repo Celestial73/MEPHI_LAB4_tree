@@ -1,6 +1,7 @@
 #include "BinaryTree_tests.h"
 #include <iostream>
 #include <time.h>
+#include "./TestMacros.h"
 #include "../TreeUtility/TreeFunctions.h"
 
 void checkDefaultTree(ds::Tree<int> *tr)

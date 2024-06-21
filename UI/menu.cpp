@@ -1,5 +1,9 @@
 #include <iostream>
 #include "menu.h"
+#include "../tests/PriorityQueue_tests.h"
+#include "../tests/BinaryTree_tests.h"
+#include "../TreeUtility/TreeFunctions.h"
+#include "PrintFunctions.h"
 #include <bits/stdc++.h>
 using namespace std;
 void menu()
@@ -8,19 +12,22 @@ void menu()
     while (true)
     {
         printMainMenu();
-        manageNumber = getIntegerInRange(1, 4);
+        manageNumber = getIntegerInRange(1, 5);
         switch (manageNumber)
         {
         case 1:
             tryTree();
             break;
         case 2:
-            runTests();
+            tryPriorityQueue();
             break;
         case 3:
-            compareExecutionTimes();
+            runTests();
             break;
         case 4:
+            compareExecutionTimes();
+            break;
+        case 5:
             return;
         default:
             return;
@@ -31,6 +38,28 @@ void menu()
 void runTests()
 {
     testTree();
+    testPriorityQueue();
+}
+
+void tryPriorityQueue()
+{
+    int manageNumber;
+    printPriorityQueueOperations();
+    manageNumber = getIntegerInRange(1, 3);
+    switch (manageNumber)
+    {
+    case 1:
+        queueCreation();
+        break;
+    case 2:
+        queueGetSubsequence();
+        break;
+    case 3:
+        queueFindSubsequence();
+        break;
+    default:
+        return;
+    }
 }
 
 void tryTree()
@@ -74,7 +103,74 @@ void tryTree()
     }
 }
 
-void fillTree(ds::Tree<int> **destination)
+void queueCreation()
+{
+    ds::PriorityQueue<int> *queue = new ds::PriorityQueue<int>();
+    fillIntegerQueue(queue);
+    cout << "The queue is: " << endl;
+    printIntegerQueue(queue, queue->getLength());
+}
+
+void queueFindSubsequence()
+{
+    cout << "First create the main queue, where the subqueue will be searched for: " << endl;
+    ds::PriorityQueue<int> *queue = new ds::PriorityQueue<int>();
+    fillIntegerQueue(queue);
+    cout << "The queue is: " << endl;
+    printIntegerQueue(queue, queue->getLength());
+    cout << "Create the subqueue: " << endl;
+    ds::PriorityQueue<int> *subqueue = new ds::PriorityQueue<int>();
+    fillIntegerQueue(subqueue);
+    cout << "The subqueue is: " << endl;
+    printIntegerQueue(subqueue, subqueue->getLength());
+    int result = queue->findSubsequence(*subqueue);
+    if (result == -1)
+    {
+        cout << "The subqueue is not present in the queue. " << endl;
+    }
+    else
+    {
+        cout << "The subqueue is present in the queue. The first entry starts on the " << result << "th element." << endl;
+    }
+}
+void queueGetSubsequence()
+{
+    cout << "First create the queue to get the subsequence from: " << endl;
+    ds::PriorityQueue<int> *queue = new ds::PriorityQueue<int>();
+    fillIntegerQueue(queue);
+    cout << "The queue is: " << endl;
+    printIntegerQueue(queue, queue->getLength());
+    cout << "Enter the start index: " << endl;
+    int startIndex = getIntegerInRange(0, queue->getLength() - 1);
+    cout << "Enter the end index: " << endl;
+    int endIndex = getIntegerInRange(startIndex, queue->getLength() - 1);
+    ds::PriorityQueue<int> *subqueue = queue->getSubsequence(startIndex, endIndex);
+    cout << "The subqueue is: " << endl;
+    printIntegerQueue(subqueue, subqueue->getLength());
+    delete queue;
+    delete subqueue;
+}
+
+void fillIntegerQueue(ds::PriorityQueue<int> *queue)
+{
+    std::cout << "Enter the integer queue elements. (Input a character when you want to stop)" << std::endl;
+    int data;
+    int priority;
+
+    std::cout << "Input the data of the element: " << std::endl;
+    while (createInteger(&data))
+    {
+        std::cout << "Input the priority of the element: " << std::endl;
+        while (!createInteger(&priority))
+        {
+            std::cout << "Input the priority of the element: " << std::endl;
+        }
+        std::cout << "Input the data of the element: " << std::endl;
+        queue->push(data, priority);
+    }
+}
+
+void fillIntegerTree(ds::Tree<int> **destination)
 {
     std::cout << "Enter the integer tree elements. The tree balances itself.(Input a character when you want to stop)" << std::endl;
     int number;
@@ -87,7 +183,7 @@ void fillTree(ds::Tree<int> **destination)
 void treeCreation()
 {
     ds::Tree<int> *tr = nullptr;
-    fillTree(&tr);
+    fillIntegerTree(&tr);
     cout << "The tree is: \n";
     printBT(tr);
 
@@ -111,7 +207,7 @@ void treeCreationFromString()
 void saveTreeToString()
 {
     ds::Tree<int> *tr = nullptr;
-    fillTree(&tr);
+    fillIntegerTree(&tr);
     cout << "The tree is: \n";
     printBT(tr);
     string resultString = treeToString(tr);
@@ -126,7 +222,7 @@ void treeMap()
 {
     cout << "Create an integer tree, and it will be doubled via map method. " << endl;
     ds::Tree<int> *tr = nullptr;
-    fillTree(&tr);
+    fillIntegerTree(&tr);
     cout << "The tree is: \n";
     printBT(tr);
     ds::Tree<int> *doubledTree = nullptr;
@@ -141,7 +237,7 @@ void treeWhere()
 {
     cout << "Create an integer tree, and it will be filtered to have only even numbers via where method. " << endl;
     ds::Tree<int> *tr = nullptr;
-    fillTree(&tr);
+    fillIntegerTree(&tr);
     cout << "The tree is: \n";
     printBT(tr);
     ds::Tree<int> *filteredTree = nullptr;
@@ -156,7 +252,7 @@ void treeReduce()
 {
     cout << "Create an integer tree, and it will be reduced to the sum of it's elements via reduce method. " << endl;
     ds::Tree<int> *tr = nullptr;
-    fillTree(&tr);
+    fillIntegerTree(&tr);
     cout << "The tree is: \n";
     printBT(tr);
 

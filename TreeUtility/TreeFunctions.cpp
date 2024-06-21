@@ -1,5 +1,5 @@
 #include "TreeFunctions.h"
-#include <bits/stdc++.h>
+
 using namespace std;
 
 int findIndexOfClosingChar(const string &str, int startIndex, int endIndex, char openChar, char closeChar, int count = 0)
@@ -80,24 +80,4 @@ ds::Tree<int> *treeFromString(const string str, int si, int ei)
     }
 
     return root;
-}
-
-void printBinaryTree(const std::string &prefix, const ds::Tree<int> *tr, bool isLeft)
-{
-    if (tr != nullptr)
-    {
-        printBinaryTree(prefix + "     ", tr->getRight(), false);
-        std::cout << (prefix + ("|-- ")) << tr->get() << endl;
-        printBinaryTree(prefix + "     ", tr->getLeft(), true);
-    }
-}
-
-void printBT(const ds::Tree<int> *tree)
-{
-    printBinaryTree("", tree, false);
-}
-
-void printInt(int i)
-{
-    std::cout << i << " ";
 }

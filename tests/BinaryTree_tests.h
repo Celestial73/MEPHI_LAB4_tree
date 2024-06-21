@@ -1,6 +1,5 @@
 #pragma once
 #include "../DataStructures/BinaryTree.h"
-#include "./TestMacros.h"
 
 void testTreeInsert();
 void testTreeHeight();
