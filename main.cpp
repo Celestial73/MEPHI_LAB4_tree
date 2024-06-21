@@ -1,5 +1,6 @@
 #include <iostream>
 #include "./UI/menu.h"
+#include "./tests/PriorityQueue_tests.h"
 
 using namespace std;
 
@@ -7,7 +8,7 @@ int main()
 {
 	try
 	{
-		menu();
+		testPriorityQueue();
 	}
 	catch (const std::exception &e)
 	{

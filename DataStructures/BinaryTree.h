@@ -154,12 +154,7 @@ namespace ds
             reduce(result, root->right, BinaryOperation);
         };
 
-        const T &get() const
-        {
-            return this->data;
-        };
-
-        int count(Tree *root) const
+        static int count(Tree *root)
         {
             if (root == nullptr)
                 return 0;
@@ -170,13 +165,40 @@ namespace ds
             return l + r + 1;
         };
 
-        Tree *treeMin()
+        static Tree *treeMin(Tree *item)
         {
-            return treeMinByRoot(this);
+            if (item == nullptr)
+            {
+                return nullptr;
+            }
+            while (item->left != nullptr)
+            {
+                item = item->left;
+            }
+            return item;
         };
-        Tree *treeSuccessor()
+
+        static Tree *treeSuccessor(Tree *item)
         {
-            return treeSuccessorByRoot(this);
+            if (item == nullptr)
+            {
+                return nullptr;
+            }
+            if (item->right != nullptr)
+            {
+                return item->right->treeMin(item->right);
+            }
+
+            Tree *parent = item->parent;
+            // go up the ladder
+            // once the item will not be to the right of the parent, the parent will be the item's successor
+            while (parent != nullptr && item == parent->right)
+            {
+                item = parent;
+                parent = parent->parent;
+            }
+
+            return parent;
         };
         static void deleteElement(const T &data, Tree **root)
         {
@@ -219,37 +241,12 @@ namespace ds
                 // replace the node's value with the successor's value, and delete the successor.
                 else
                 {
-                    Tree *temp = treeMinByRoot((*root)->right);
+                    Tree *temp = treeMin((*root)->right);
                     (*root)->data = temp->data;
                     deleteElement(temp->data, &(*root)->right);
                 }
             }
             *root = Balance(*root);
-        }
-
-        const Tree *getLeft() const
-        {
-            return this->left;
-        }
-        const Tree *getRight() const
-        {
-            return this->right;
-        }
-        const Tree *getParent() const
-        {
-            return this->parent;
-        }
-        void setLeft(Tree *newLeft)
-        {
-            left = newLeft;
-        }
-        void setRight(Tree *newRight)
-        {
-            right = newRight;
-        }
-        void setParent(Tree *newParent)
-        {
-            parent = newParent;
         }
 
         static Tree *Balance(Tree *tr)
@@ -289,8 +286,15 @@ namespace ds
             }
             int leftHeight, rightHeight;
 
-            root->left == nullptr ? leftHeight = 0 : leftHeight = height(root->left);
-            root->right == nullptr ? rightHeight = 0 : rightHeight = height(root->right);
+            if (root->left == nullptr)
+                leftHeight = 0;
+            else
+                leftHeight = height(root->left);
+
+            if (root->right == nullptr)
+                rightHeight = 0;
+            else
+                rightHeight = height(root->right);
 
             if (leftHeight > rightHeight)
             {
@@ -354,6 +358,36 @@ namespace ds
             }
         }
 
+        const T &get() const
+        {
+            return this->data;
+        };
+
+        const Tree *getLeft() const
+        {
+            return this->left;
+        }
+        const Tree *getRight() const
+        {
+            return this->right;
+        }
+        const Tree *getParent() const
+        {
+            return this->parent;
+        }
+        void setLeft(Tree *newLeft)
+        {
+            left = newLeft;
+        }
+        void setRight(Tree *newRight)
+        {
+            right = newRight;
+        }
+        void setParent(Tree *newParent)
+        {
+            parent = newParent;
+        }
+
     private:
         static void copyTree(Tree **newTree, Tree *root)
         {
@@ -366,34 +400,6 @@ namespace ds
             copyTree(newTree, root->left);
             copyTree(newTree, root->right);
         }
-
-        static Tree *treeMinByRoot(Tree *item)
-        {
-            while (item->left != nullptr)
-            {
-                item = item->left;
-            }
-            return item;
-        };
-
-        static Tree *treeSuccessorByRoot(Tree *item)
-        {
-            if (item->right != nullptr)
-            {
-                return item->right->treeMin();
-            }
-
-            Tree *p = item->parent;
-            // go up the ladder
-            // once the item will not be to the right of the parent, the parent will be the item's successor
-            while (p != nullptr && item == p->right)
-            {
-                item = p;
-                p = p->parent;
-            }
-
-            return p;
-        };
 
         // difference between left and right subtree heights
         static int factor(Tree *root)
